@@ -10,51 +10,82 @@
     <header>
       <div class="topo">
         <div class="logo">
-          <img src="/static/images/Logo.png" alt="Logo Site Católico" width="1000" />
+          <img
+            src="/static/images/Logo.png"
+            alt="Logo Site Católico"
+            width="1000"
+          />
         </div>
       </div>
     </header>
-    
+
     <nav>
-      <a href="#" class="container">   <img src="/static/images/inicio/logo.png" alt="" width="125"> INÍCIO </a>
-      
-      <a href="catecismo.html" class="container">   <img src="/static/images/catecismo/logo.png" alt="" width="125"> CATECISMO  </a>
-      
-      <a href="milagres.html" class="container">    <img src="/static/images/milagres/logo.png" alt="" width="125">  MILAGRES  </a>
-      
-      <a href="liturgia.html" class="container">    <img src="/static/images/liturgua/logo.png" alt="" width="125">  LITURGIA  </a>
-      
-      <a href="#" class="container" id="santos">  <img src="/static/images/santos/logo.png" alt="" width="125">  SANTOS  </a>
-      
-      <a href="oracoes.html" class="container"> <img src="/static/images/oracoes/logo.png" alt="" width="125"> ORAÇÕES  </a>
+      <a href="#" class="container">
+        <img src="/static/images/inicio/logo.png" alt="" width="125" /> INÍCIO
+      </a>
+
+      <a href="catecismo.html" class="container">
+        <img src="/static/images/catecismo/logo.png" alt="" width="125" />
+        CATECISMO
+      </a>
+
+      <a href="milagres.html" class="container">
+        <img src="/static/images/milagres/logo.png" alt="" width="125" />
+        MILAGRES
+      </a>
+
+      <a href="liturgia.html" class="container">
+        <img src="/static/images/liturgua/logo.png" alt="" width="125" />
+        LITURGIA
+      </a>
+
+      <a href="#" class="container" id="santos">
+        <img src="/static/images/santos/logo.png" alt="" width="125" /> SANTOS
+      </a>
+
+      <a href="oracoes.html" class="container">
+        <img src="/static/images/oracoes/logo.png" alt="" width="125" /> ORAÇÕES
+      </a>
     </nav>
-    
-    
-    <div class="content">
-      
-    
-      
 
+    <div class="content"></div>
 
-    </div>
-      
     <script>
-       function carregarConteudo(endpoint) {
-        $.get(endpoint, function(data) {
-          $('.content').html(data);  // Atualiza o conteúdo da div
-        });
-      }
+      const a = document.querySelector("#santos");
+      const container = document.querySelector(".content");
 
-      // Configuração para cada botão
-      $('#santos').click(function() {
-        carregarConteudo('/santos');  // A rota '/santos' vai retornar o conteúdo
+      const carregarConteudo = async () => {
+        const response = await fetch("http://127.0.0.1:5000/santos");
+
+        if (!response.ok) {
+          throw new Error("Jorge");
+        }
+
+        const dados = await response.json();
+
+        return dados;
+      };
+
+      a.addEventListener("click", async () => {
+        const dados = await carregarConteudo();
+
+        container.innerHTML = dados.marcacao;
       });
 
-    
-    </script>
+      container.addEventListener("click", async (event) => {
+        const clicado = event.target;
 
-      
-      
-    </body>
-    </html>
-    
+        const santoId = clicado.id;
+        const response = await fetch(`http://127.0.0.1:5000/santos/${santoId}`);
+
+        if (!response.ok) {
+          throw new Error("Jorge");
+        }
+
+        const dados = await response.json();
+
+        console.log(dados);
+      });
+    </script>
+  </body>
+</html>
